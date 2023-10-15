@@ -81,11 +81,20 @@ def update_gateway_policy(name: str, policy_id: str, list_ids: list[str]):
     return r.json()["result"]
 
 
-def delete_firewall_policy(policy_id: str):
+def delete_gateway_policy(policy_name_prefix: str):    
+    r = session.get(
+        f"https://api.cloudflare.com/client/v4/accounts/{CF_IDENTIFIER}/gateway/rules",
+    )
+    if r.status_code != 200:
+        raise Exception("Failed to get Cloudflare firewall policies")
+    policies = r.json()["result"] or []
+    policy_to_delete = next((p for p in policies if p["name"].startswith(policy_name_prefix)), None)
+    if not policy_to_delete:
+        return 0
+    policy_id = policy_to_delete["id"]
     r = session.delete(
         f"https://api.cloudflare.com/client/v4/accounts/{CF_IDENTIFIER}/gateway/rules/{policy_id}",
     )
-    logger.debug(f"[delete_policy] {r.status_code}")
     if r.status_code != 200:
-        raise Exception("Failed to delete Cloudflare policy")
-    return r.json()["result"]
+        raise Exception("Failed to delete Cloudflare gateway firewall policy")
+    return 1
