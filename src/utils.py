@@ -49,8 +49,8 @@ class App:
             return 
 
         # Delete existing policy created by script
-        policy_prefix = f"{self.name_prefix} Block Ads"
-        deleted_policies = cloudflare.delete_gateway_policy(policy_prefix)
+        cf_policies = cloudflare.get_firewall_policies(self.name_prefix)            
+        deleted_policies = cloudflare.delete_gateway_policy(self.name_prefix)
         logging.info(f"Deleted {deleted_policies} gateway policies")
 
         # delete the lists
