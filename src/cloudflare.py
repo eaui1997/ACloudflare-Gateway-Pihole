@@ -81,7 +81,7 @@ def update_gateway_policy(name: str, policy_id: str, list_ids: list[str]):
     return r.json()["result"]
 
 
-def delete_firewall_policy(policy_id: str):
+def delete_gateway_policy(policy_id: str):
     r = session.delete(
         f"https://api.cloudflare.com/client/v4/accounts/{CF_IDENTIFIER}/gateway/rules/{policy_id}",
     )
