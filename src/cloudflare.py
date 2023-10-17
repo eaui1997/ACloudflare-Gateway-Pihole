@@ -85,7 +85,6 @@ def delete_gateway_policy(policy_id: str):
     r = session.delete(
         f"https://api.cloudflare.com/client/v4/accounts/{CF_IDENTIFIER}/gateway/rules/{policy_id}",
     )
-    logger.debug(f"[delete_policy] {r.status_code}")
     if r.status_code != 200:
         raise Exception("Failed to delete Cloudflare policy")
     return r.json()["result"]
